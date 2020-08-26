@@ -1,5 +1,6 @@
 package com.teamone.plafic;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -62,7 +63,10 @@ public class MapActivity extends AppCompatActivity {
         recyclerView.setAdapter(locationAdapter);
 
         btnAccept.setOnClickListener(view -> {
-
+            Intent output = new Intent();
+            output.putExtra("location", mSearchEdit.getText().toString());
+            setResult(1, output);
+            finish();
         });
 
         // editText 검색 텍스처이벤트

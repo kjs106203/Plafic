@@ -52,12 +52,15 @@
 
         </LinearLayout>
 
-        <Button
+        <ImageButton
+            android:layout_margin="10dp"
             android:id="@+id/btnAddPlan"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="일정 추가"/>
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/addicon"
+            android:background="@null"/>
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -72,7 +72,7 @@ public class AddPlanActivity extends AppCompatActivity {
         EditText txtLocation = findViewById(R.id.txtLocation);
         txtLocation.setOnClickListener(view -> {
             Intent activityMap = new Intent(getApplicationContext(), MapActivity.class);
-            startActivity(activityMap);
+            startActivityForResult(activityMap, 1);
         });
 
         Button btnBack = findViewById(R.id.btnBack);
@@ -98,6 +98,9 @@ public class AddPlanActivity extends AppCompatActivity {
 
             db.insert(DBEntry.TABLE_NAME, null, values);
 
+            finish();
+
+            /*
             db = dbManager.getReadableDatabase();
             String[] projection = {
                     BaseColumns._ID,
@@ -125,8 +128,16 @@ public class AddPlanActivity extends AppCompatActivity {
             }
 
             cursor.close();
+            */
         });
-    };
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        txtLocation.setText(data.getStringExtra("location"));
+    }
+
 }
 
 
