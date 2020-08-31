@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         CalendarView calendarView = (CalendarView)findViewById(R.id.CalendarView);
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             Intent intent = new Intent(getApplicationContext(), AddPlanActivity.class);
-            month++;
             String str = year + "-" + month + "-" + dayOfMonth;
             intent.putExtra("datestr", str);
 
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         btnAddPlan.setOnClickListener(view -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH) + 1;
+            int month = calendar.get(Calendar.MONTH);
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
             Intent intent = new Intent(getApplicationContext(), AddPlanActivity.class);
