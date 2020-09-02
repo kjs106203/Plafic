@@ -25,6 +25,9 @@ public class AddPlanActivity extends AppCompatActivity {
     int s_hour;
     int s_min;
 
+    double x;
+    double y;
+
     EditText txtTitle;
     EditText txtLocation;
 
@@ -93,42 +96,12 @@ public class AddPlanActivity extends AppCompatActivity {
             String strtime = String.valueOf(s_hour) + ":" + String.valueOf(s_min);
             values.put(DBEntry.TIME, strtime);
             values.put(DBEntry.LOCATION, txtLocation.getText().toString());
-            values.put(DBEntry.GEO_X, "0");
-            values.put(DBEntry.GEO_Y, "0");
+            values.put(DBEntry.GEO_X, String.valueOf(x));
+            values.put(DBEntry.GEO_Y, String.valueOf(y));
 
             db.insert(DBEntry.TABLE_NAME, null, values);
 
             finish();
-
-            /*
-            db = dbManager.getReadableDatabase();
-            String[] projection = {
-                    BaseColumns._ID,
-                    DBEntry.TITLE,
-                    DBEntry.DATE,
-                    DBEntry.TIME,
-                    DBEntry.LOCATION
-            };
-            Cursor cursor = db.query(
-                    DBEntry.TABLE_NAME,
-                    projection,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            );
-
-            while (cursor.moveToNext()) {
-                String ttl = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.TITLE));
-                String dat = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.DATE));
-                String tim = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.TIME));
-                String loc = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.LOCATION));
-                Log.d("DBQUERY", ttl + " " + dat + " " + tim + " " + loc);
-            }
-
-            cursor.close();
-            */
         });
     }
 
@@ -136,6 +109,8 @@ public class AddPlanActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         txtLocation.setText(data.getStringExtra("location"));
+        x = data.getDoubleExtra("x", 127.00);
+        y = data.getDoubleExtra("y", 37.56);
     }
 
 }

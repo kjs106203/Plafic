@@ -26,6 +26,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     RecyclerView recyclerView;
     MapView mMapView;
 
+    public double s_x;
+    public double s_y;
+
     public LocationAdapter(ArrayList<Document> items, Context context, EditText editText, RecyclerView recyclerView, MapView mapView) {
         this.context = context;
         this.items = items;
@@ -78,9 +81,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             editText.setText(model.getPlaceName());
             recyclerView.setVisibility(View.GONE);
 
-            double x = Double.parseDouble(model.getX());
-            double y = Double.parseDouble(model.getY()); //검색 위치의 좌표를 double형 변수 x, y에 저장
-            MapPoint markerPoint = MapPoint.mapPointWithGeoCoord(y, x); //검색 위치의 좌표 정보를 포함하는 MapPoint 객체 생성
+            s_x = Double.parseDouble(model.getX());
+            s_y = Double.parseDouble(model.getY()); //검색 위치의 좌표를 double형 변수 x, y에 저장
+            MapPoint markerPoint = MapPoint.mapPointWithGeoCoord(s_y, s_x); //검색 위치의 좌표 정보를 포함하는 MapPoint 객체 생성
 
             mMapView.setMapCenterPoint(markerPoint, true); //검색 위치를 지도의 중심으로 설정
 

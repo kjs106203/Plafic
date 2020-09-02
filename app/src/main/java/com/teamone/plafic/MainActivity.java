@@ -1,5 +1,6 @@
 package com.teamone.plafic;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,9 +15,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -24,17 +23,23 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.recyclerview.widget.ListAdapter;
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
+import java.sql.Ref;
 import java.util.Calendar;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
     ListView listPlan;
     Vector<String> vectorPlan;
-    ArrayAdapter listAdapter;
+    ArrayAdapter<String> listAdapter;
+
+    NotificationCompat.Builder notiBuilder;
+    NotificationManagerCompat notiManager;
+
+    int s_year = 0;
+    int s_month = 0;
+    int s_day = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +47,19 @@ public class MainActivity extends AppCompatActivity {
         Log.d("ACTIVITY", "MainActivity has created.");
         setContentView(R.layout.activity_main);
         getHashKey();
-        CalendarView calendarView = (CalendarView)findViewById(R.id.CalendarView);
-        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            Intent intent = new Intent(getApplicationContext(), AddPlanActivity.class);
-            month++;
-            String str = year + "-" + month + "-" + dayOfMonth;
-            intent.putExtra("datestr", str);
 
-            startActivity(intent);
+        Calendar calendar = Calendar.getInstance();
+        s_year = calendar.get(Calendar.YEAR);
+        s_month = calendar.get(Calendar.MONTH);
+        s_day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        CalendarView calendarView = findViewById(R.id.CalendarView);
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            s_year = year;
+            s_month = month;
+            s_day = dayOfMonth;
+
+            refreshPlanList(constructDate(s_year, s_month, s_day));
         });
 
         listPlan = findViewById(R.id.listPlan);
@@ -57,13 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         ImageButton btnAddPlan = findViewById(R.id.btnAddPlan);
         btnAddPlan.setOnClickListener(view -> {
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH) + 1;
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
             Intent intent = new Intent(getApplicationContext(), AddPlanActivity.class);
-            String str = year + "-" + month + "-" + dayOfMonth;
+            String str = s_year + "-" + s_month + "-" + s_day;
             intent.putExtra("datestr", str);
 
             startActivity(intent);
@@ -72,16 +77,36 @@ public class MainActivity extends AppCompatActivity {
         ODsayBackend oDsayBackend = new ODsayBackend(getApplicationContext());
 
         createNotiChannel();
-        showNoti();
+
+        notiManager = NotificationManagerCompat.from(this);
+
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        notiBuilder = new NotificationCompat.Builder(this, "com.teamone.plafic")
+                .setSmallIcon(R.drawable.addicon)
+                .setContentTitle("Plafic")
+                .setContentText("다음 약속까지 N시간")
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        RefreshThread refreshThread = new RefreshThread(this);
+        refreshThread.start();
+
+        refreshPlanList(constructDate(s_year, s_month, s_day));
     }
 
     public void onResume() {
         super.onResume();
 
-        refreshPlanList();
+        refreshPlanList(constructDate(s_year, s_month, s_day));
     }
 
-    private void refreshPlanList() {
+    private void refreshPlanList(String date) {
         vectorPlan.clear();
 
         DBManager dbManager = new DBManager(getApplicationContext());
@@ -92,13 +117,18 @@ public class MainActivity extends AppCompatActivity {
                 DBEntry.TITLE,
                 DBEntry.DATE,
                 DBEntry.TIME,
-                DBEntry.LOCATION
+                DBEntry.LOCATION,
+                DBEntry.GEO_X,
+                DBEntry.GEO_Y
         };
+        String whereClause = "date = ?";
+        String[] whereVal = {date};
+
         Cursor cursor = db.query(
                 DBEntry.TABLE_NAME,
                 projection,
-                null,
-                null,
+                whereClause,
+                whereVal,
                 null,
                 null,
                 null
@@ -109,10 +139,12 @@ public class MainActivity extends AppCompatActivity {
             String dat = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.DATE));
             String tim = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.TIME));
             String loc = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.LOCATION));
-            vectorPlan.add(ttl + " " + dat + " " + tim + " " + loc);
+            String x = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.GEO_X));
+            String y = cursor.getString(cursor.getColumnIndexOrThrow(DBEntry.GEO_Y));
+            vectorPlan.add(ttl + " " + dat + " " + tim + " " + loc + " " + x + " " + y);
         }
 
-        listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, vectorPlan);
+        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, vectorPlan);
         listPlan.setAdapter(listAdapter);
 
         cursor.close();
@@ -121,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getHashKey() {
         try{
+            @SuppressLint("PackageManagerGetSignatures")
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md;
@@ -132,6 +165,17 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e){
             Log.e("name not found", e.toString());
         }
+    }
+
+    private String constructDate(int year, int month, int day) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(year);
+        builder.append("-");
+        builder.append(month);
+        builder.append("-");
+        builder.append(day);
+
+        return builder.toString();
     }
 
     private void createNotiChannel() {
@@ -147,22 +191,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showNoti() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+    public void showNoti(String content, NotificationCompat.Builder builder, NotificationManagerCompat mgr) {
+        builder.setContentText(content);
 
-        NotificationCompat.Builder notiBuilder = new NotificationCompat.Builder(this, "com.teamone.plafic")
-                .setSmallIcon(R.drawable.addicon)
-                .setContentTitle("Plafic")
-                .setContentText("다음 약속까지 N시간")
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("다음 약속까지 N시간"))
-                .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notiManager = NotificationManagerCompat.from(this);
-        notiManager.notify(2723, notiBuilder.build());
+        mgr.notify(2723, builder.build());
     }
 }
 

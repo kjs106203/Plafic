@@ -65,6 +65,8 @@ public class MapActivity extends AppCompatActivity {
         btnAccept.setOnClickListener(view -> {
             Intent output = new Intent();
             output.putExtra("location", mSearchEdit.getText().toString());
+            output.putExtra("x", locationAdapter.s_x);
+            output.putExtra("y", locationAdapter.s_y);
             setResult(1, output);
             finish();
         });
