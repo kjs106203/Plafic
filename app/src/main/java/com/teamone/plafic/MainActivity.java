@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         CalendarView calendarView = findViewById(R.id.CalendarView);
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+
             s_year = year;
             s_month = month;
             s_day = dayOfMonth;
