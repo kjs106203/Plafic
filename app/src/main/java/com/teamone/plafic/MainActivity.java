@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     int s_month = 0;
     int s_day = 0;
 
+    public double longitude;
+    public double latitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        ODsayBackend oDsayBackend = new ODsayBackend(getApplicationContext());
-
         createNotiChannel();
 
         notiManager = NotificationManagerCompat.from(this);
@@ -99,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
         refreshThread.start();
 
         refreshPlanList(constructDate(s_year, s_month, s_day));
+
+        ODsayBackend oDsayBackend = new ODsayBackend(getApplicationContext());
+        oDsayBackend.requestRoute(longitude, latitude, 127.087869, 36.990480);
     }
 
     public void onResume() {
