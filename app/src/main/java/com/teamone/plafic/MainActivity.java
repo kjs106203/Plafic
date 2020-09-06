@@ -24,6 +24,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.security.MessageDigest;
 import java.sql.Ref;
 import java.util.Calendar;
@@ -100,9 +103,6 @@ public class MainActivity extends AppCompatActivity {
         refreshThread.start();
 
         refreshPlanList(constructDate(s_year, s_month, s_day));
-
-        ODsayBackend oDsayBackend = new ODsayBackend(getApplicationContext());
-        oDsayBackend.requestRoute(longitude, latitude, 127.087869, 36.990480);
     }
 
     public void onResume() {

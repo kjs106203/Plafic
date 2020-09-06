@@ -11,6 +11,11 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.Vector;
+
 public class RefreshThread extends Thread {
     MainActivity m_parent;
     private final LocationListener locationListener;
@@ -18,6 +23,8 @@ public class RefreshThread extends Thread {
 
     double longitude;
     double latitude;
+
+    ODsayBackend oDsayBackend;
 
     public RefreshThread(MainActivity parent) {
         m_parent = parent;
@@ -34,6 +41,8 @@ public class RefreshThread extends Thread {
             e.printStackTrace();
             Log.e("PERMISSION", "PERMISSION ERROR");
         }
+
+        oDsayBackend = new ODsayBackend(m_parent.getApplicationContext());
     }
 
     @Override
@@ -54,12 +63,36 @@ public class RefreshThread extends Thread {
                     m_parent.latitude = latitude;
                 }
 
-                m_parent.showNoti(String.valueOf(longitude) + " / " + String.valueOf(latitude), m_parent.notiBuilder, m_parent.notiManager);
+                //m_parent.showNoti(String.valueOf(longitude) + " / " + String.valueOf(latitude), m_parent.notiBuilder, m_parent.notiManager);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("PERMISSION", "PERMISSION ERROR");
             }
 
+            JSONArray path = oDsayBackend.requestRoute(longitude, latitude, 127.087869, 36.990480);
+
+            Vector<Integer> totaltimes = new Vector<>();
+
+            if (path != null) {
+                for (int i = 0; i < path.length(); i++) {
+                    try {
+                        totaltimes.add(path.getJSONObject(i).getJSONObject("info").getInt("totalTime"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("JSON_ERROR", "JSON error occured.");
+                    }
+                }
+
+                int longesttime = 0;
+
+                for (int time : totaltimes) {
+                    if (time > longesttime) {
+                        longesttime = time;
+                    }
+                }
+
+                m_parent.showNoti(String.valueOf(longesttime), m_parent.notiBuilder, m_parent.notiManager);
+            }
 
             try {
                 Thread.sleep(3000);

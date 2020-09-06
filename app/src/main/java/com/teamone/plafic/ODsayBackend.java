@@ -41,7 +41,7 @@ public class ODsayBackend {
         String s_ex = String.valueOf(ex);
         String s_ey = String.valueOf(ey);
 
-        JSONArray pathArray;
+        final JSONArray[] pathArray = new JSONArray[1];
 
         oDsayService.requestSearchPubTransPath(s_sx, s_sy, s_ex, s_ey, "0", "0", "0", new OnResultCallbackListener() {
             @Override
@@ -50,10 +50,10 @@ public class ODsayBackend {
                     JSONObject resjson = oDsayData.getJson().getJSONObject("result");
                     Log.d("JSON", resjson.toString());
 
-                    JSONArray pathArray = resjson.getJSONArray("path");
+                    pathArray[0] = resjson.getJSONArray("path");
 
-                    for (int i = 0; i < pathArray.length(); i++) {
-                        int time = pathArray.getJSONObject(i).getJSONObject("info").getInt("totalTime");
+                    for (int i = 0; i < pathArray[0].length(); i++) {
+                        int time = pathArray[0].getJSONObject(i).getJSONObject("info").getInt("totalTime");
                         Log.d("ROUTE", String.valueOf(time));
                     }
                 } catch (JSONException e) {
@@ -67,5 +67,7 @@ public class ODsayBackend {
 
             }
         });
+
+        return pathArray[0];
     }
 }
