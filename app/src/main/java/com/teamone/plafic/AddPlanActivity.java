@@ -90,6 +90,7 @@ public class AddPlanActivity extends AppCompatActivity {
 
             ContentValues values = new ContentValues();
             values.put(DBEntry.TITLE, txtTitle.getText().toString());
+            s_month++;
             String strdate = String.valueOf(s_year) + "-" + String.valueOf(s_month) + "-" +
                     String.valueOf(s_day);
             values.put(DBEntry.DATE, strdate);

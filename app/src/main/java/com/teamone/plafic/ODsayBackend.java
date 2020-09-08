@@ -12,9 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ODsayBackend {
+public class ODsayBackend implements OnResultCallbackListener {
     String apiKey = "inV61SM+ZAXovckEz4mF1RQKg5j7T9bAJvvpxOvvvI4";
     ODsayService oDsayService;
+    JSONArray pathArray;
 
     public ODsayBackend(Context context) {
         oDsayService = ODsayService.init(context, apiKey);
@@ -41,33 +42,31 @@ public class ODsayBackend {
         String s_ex = String.valueOf(ex);
         String s_ey = String.valueOf(ey);
 
-        final JSONArray[] pathArray = new JSONArray[1];
+        oDsayService.requestSearchPubTransPath(s_sx, s_sy, s_ex, s_ey, "0", "0", "0", this);
 
-        oDsayService.requestSearchPubTransPath(s_sx, s_sy, s_ex, s_ey, "0", "0", "0", new OnResultCallbackListener() {
-            @Override
-            public void onSuccess(ODsayData oDsayData, API api) {
-                try {
-                    JSONObject resjson = oDsayData.getJson().getJSONObject("result");
-                    Log.d("JSON", resjson.toString());
+        return pathArray;
+    }
 
-                    pathArray[0] = resjson.getJSONArray("path");
+    @Override
+    public void onSuccess(ODsayData oDsayData, API api) {
+        try {
+            JSONObject resjson = oDsayData.getJson().getJSONObject("result");
+            Log.d("JSON", resjson.toString());
 
-                    for (int i = 0; i < pathArray[0].length(); i++) {
-                        int time = pathArray[0].getJSONObject(i).getJSONObject("info").getInt("totalTime");
-                        Log.d("ROUTE", String.valueOf(time));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("JSON_ERROR", "JSON error occured.");
-                }
+            pathArray = resjson.getJSONArray("path");
+
+            for (int i = 0; i < pathArray.length(); i++) {
+                int time = pathArray.getJSONObject(i).getJSONObject("info").getInt("totalTime");
+                Log.d("ROUTE", String.valueOf(time));
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("JSON_ERROR", "JSON error occured.");
+        }
+    }
 
-            @Override
-            public void onError(int i, String s, API api) {
+    @Override
+    public void onError(int i, String s, API api) {
 
-            }
-        });
-
-        return pathArray[0];
     }
 }

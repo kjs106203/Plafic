@@ -196,10 +196,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showNoti(String content, NotificationCompat.Builder builder, NotificationManagerCompat mgr) {
-        builder.setContentText(content);
+    public void showNoti(String content) {
+        notiBuilder.setContentText(content);
 
-        mgr.notify(2723, builder.build());
+        notiManager.notify(2723, notiBuilder.build());
     }
 }
 
