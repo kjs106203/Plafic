@@ -54,16 +54,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getHashKey();
 
-        Calendar calendar = Calendar.getInstance();
-        s_year = calendar.get(Calendar.YEAR);
-        s_month = calendar.get(Calendar.MONTH);
-        s_day = calendar.get(Calendar.DAY_OF_MONTH);
-
         CalendarView calendarView = findViewById(R.id.CalendarView);
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-
             s_year = year;
-            s_month = month;
+            s_month = month + 1;
             s_day = dayOfMonth;
 
             refreshPlanList(constructDate(s_year, s_month, s_day));
@@ -101,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
 
         RefreshThread refreshThread = new RefreshThread(this);
         refreshThread.start();
+
+        Calendar calendar = Calendar.getInstance();
+        s_year = calendar.get(Calendar.YEAR);
+        s_month = calendar.get(Calendar.MONTH) + 1;
+        s_day = calendar.get(Calendar.DAY_OF_MONTH);
 
         refreshPlanList(constructDate(s_year, s_month, s_day));
     }
@@ -151,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, vectorPlan);
         listPlan.setAdapter(listAdapter);
+
+        Log.d("LIST", "LIST UPDATED");
 
         cursor.close();
     }

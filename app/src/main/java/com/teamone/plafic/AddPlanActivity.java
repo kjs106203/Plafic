@@ -50,7 +50,7 @@ public class AddPlanActivity extends AppCompatActivity {
         s_day = t_day;
 
         DatePicker datePicker = findViewById(R.id.datepicker);
-        datePicker.init(t_year, t_month, t_day, (dp, y, m, d) -> {
+        datePicker.init(t_year, t_month - 1, t_day, (dp, y, m, d) -> {
             s_year = y;
             s_month = m;
             s_day = d;
@@ -90,7 +90,6 @@ public class AddPlanActivity extends AppCompatActivity {
 
             ContentValues values = new ContentValues();
             values.put(DBEntry.TITLE, txtTitle.getText().toString());
-            s_month++;
             String strdate = String.valueOf(s_year) + "-" + String.valueOf(s_month) + "-" +
                     String.valueOf(s_day);
             values.put(DBEntry.DATE, strdate);

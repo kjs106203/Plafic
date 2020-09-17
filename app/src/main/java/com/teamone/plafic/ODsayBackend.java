@@ -42,7 +42,7 @@ public class ODsayBackend implements OnResultCallbackListener {
         String s_ex = String.valueOf(ex);
         String s_ey = String.valueOf(ey);
 
-        oDsayService.requestSearchPubTransPath(s_sx, s_sy, s_ex, s_ey, "0", "0", "0", this);
+        oDsayService.requestSearchPubTransPath(s_sx, s_sy, s_ex, s_ey, "0", "", "0", this);
 
         return pathArray;
     }
@@ -56,6 +56,7 @@ public class ODsayBackend implements OnResultCallbackListener {
             pathArray = resjson.getJSONArray("path");
 
             for (int i = 0; i < pathArray.length(); i++) {
+                Log.d("JSON_PATH", String.valueOf(pathArray.get(i)));
                 int time = pathArray.getJSONObject(i).getJSONObject("info").getInt("totalTime");
                 Log.d("ROUTE", String.valueOf(time));
             }
