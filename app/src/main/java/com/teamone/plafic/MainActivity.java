@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
@@ -150,6 +152,18 @@ public class MainActivity extends AppCompatActivity {
 
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, vectorPlan);
         listPlan.setAdapter(listAdapter);
+
+        listPlan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String strItem = vectorPlan.get(i);
+
+                Intent intent = new Intent(getApplicationContext(), RouteActivity.class);
+                intent.putExtra("strItem", strItem);
+
+                startActivity(intent);
+            }
+        });
 
         Log.d("LIST", "LIST UPDATED");
 

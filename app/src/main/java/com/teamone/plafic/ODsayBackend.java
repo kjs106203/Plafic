@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ODsayBackend implements OnResultCallbackListener {
+    private static ODsayBackend uniqueInstance = null;
+
     String apiKey = "inV61SM+ZAXovckEz4mF1RQKg5j7T9bAJvvpxOvvvI4";
     ODsayService oDsayService;
     JSONArray pathArray;
@@ -34,6 +36,14 @@ public class ODsayBackend implements OnResultCallbackListener {
                 Log.e("APIERR", "API FAILED.");
             }
         });
+    }
+
+    public static ODsayBackend getInstance(Context context) {
+        if (uniqueInstance == null) {
+            uniqueInstance = new ODsayBackend(context);
+        }
+
+        return uniqueInstance;
     }
 
     public JSONArray requestRoute(double sx, double sy, double ex, double ey) {

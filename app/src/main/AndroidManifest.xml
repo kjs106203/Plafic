@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".MapActivity" />
+        <activity android:name=".RouteActivity" />
         <activity android:name=".AddPlanActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

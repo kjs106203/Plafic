@@ -25,7 +25,6 @@ import java.util.Vector;
 
 public class RefreshThread extends Thread {
     MainActivity m_parent;
-    private final LocationListener locationListener;
     private LocationManager locationManager;
 
     double longitude;
@@ -36,7 +35,8 @@ public class RefreshThread extends Thread {
     public RefreshThread(MainActivity parent) {
         m_parent = parent;
 
-        locationListener = location -> {};
+        LocationListener locationListener = location -> {
+        };
         locationManager = (LocationManager) m_parent.getSystemService(Context.LOCATION_SERVICE);
 
         try {
@@ -49,7 +49,7 @@ public class RefreshThread extends Thread {
             Log.e("PERMISSION", "PERMISSION ERROR");
         }
 
-        oDsayBackend = new ODsayBackend(m_parent.getApplicationContext());
+        oDsayBackend = ODsayBackend.getInstance(m_parent.getApplicationContext());
     }
 
     @Override
@@ -153,7 +153,7 @@ public class RefreshThread extends Thread {
             }
 
             try {
-                Thread.sleep(60000);
+                Thread.sleep(90000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Log.e("REFRESH_TH", "Thread interrupted.");
