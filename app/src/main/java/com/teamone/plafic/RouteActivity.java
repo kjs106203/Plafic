@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import com.odsay.odsayandroidsdk.ODsayData;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -66,34 +67,37 @@ public class RouteActivity extends AppCompatActivity {
         for (int i = 0; i < path.length(); i++) {
             StringBuilder strpath = new StringBuilder();
             strpath.append("\n");
-            Log.d("FUCKING_SUBPATH", String.valueOf(i));
+            Log.d("SUBPATH", String.valueOf(i));
             try {
                 JSONArray subPath = path.getJSONObject(i).getJSONArray("subPath");
+                JSONArray info = oDsayBackend.pathArray;
 
                 for (int j = 0; j < subPath.length(); j++) {
+
                     JSONObject item = subPath.getJSONObject(j);
-                    Log.d("FUCKING_SUBPATH", item.toString());
+                    Log.d("SUBPATH", item.toString());
+
                     if (item.getInt("trafficType") == 3) {
-                        strpath.append("걷기:\n-" + String.valueOf(item.getInt("distance")) + "m\n");
+                        strpath.append("걷기 : " + String.valueOf(item.getInt("distance")) + "m\n");
                     } else {
                         if (item.getInt("trafficType") == 1) {
-                            strpath.append("지하철: ");
+                            strpath.append("지하철 : ");
                         } else {
-                            strpath.append("버스: ");
+                            strpath.append("버스 : ");
                         }
                         JSONArray lanes = item.getJSONArray("lane");
                         for (int l = 0; l < lanes.length(); l++) {
-                            strpath.append(lanes.getJSONObject(l).getString("busNo") + " ");
+                            strpath.append(lanes.getJSONObject(l).getString("busNo") + " \n"  + String.valueOf(item.getString("startName")) + " 탑승 \n" + String.valueOf(item.getString("endName")) + " 하차");
                         }
                         strpath.append("\n");
                         JSONArray stations = item.getJSONObject("passStopList").getJSONArray("stations");
-
-                        for (int k = 0; k < stations.length(); k++) {
-                            String stationname = stations.getJSONObject(k).getString("stationName");
-                            strpath.append("-" + stationname + "\n");
-                        }
                     }
                 }
+                int time = info.getJSONObject(i).getJSONObject("info").getInt("totalTime");
+                int pay = info.getJSONObject(i).getJSONObject("info").getInt("payment");
+                strpath.append("소요시간 : " + String.valueOf(time) + "분\n");
+                strpath.append("금액 : " + String.valueOf(pay) + "원\n");
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

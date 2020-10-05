@@ -153,7 +153,7 @@ public class RefreshThread extends Thread {
             }
 
             try {
-                Thread.sleep(90000);
+                Thread.sleep(900000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Log.e("REFRESH_TH", "Thread interrupted.");
