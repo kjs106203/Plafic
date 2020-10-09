@@ -1,4 +1,4 @@
-package com.teamone.plafic;
+package com.senier_project.planner;
 
 import android.Manifest;
 import android.content.Context;
@@ -19,7 +19,6 @@ import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 

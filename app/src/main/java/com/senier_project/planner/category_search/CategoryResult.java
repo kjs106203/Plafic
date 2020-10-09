@@ -1,11 +1,10 @@
-package com.teamone.plafic.category_search;
+package com.senier_project.planner.category_search;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.teamone.plafic.category_search.Meta;
 
 import java.util.ArrayList;
 import java.util.List;

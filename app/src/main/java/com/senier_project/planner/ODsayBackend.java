@@ -1,4 +1,4 @@
-package com.teamone.plafic;
+package com.senier_project.planner;
 
 import android.content.Context;
 import android.util.Log;
@@ -15,7 +15,7 @@ import org.json.JSONObject;
 public class ODsayBackend implements OnResultCallbackListener {
     private static ODsayBackend uniqueInstance = null;
 
-    String apiKey = "inV61SM+ZAXovckEz4mF1RQKg5j7T9bAJvvpxOvvvI4";
+    String apiKey = "UORfdXMlAnmrx3QilUXIVRXuucSRyEspXaJYmCE+pJY";
     ODsayService oDsayService;
     JSONArray pathArray;
 

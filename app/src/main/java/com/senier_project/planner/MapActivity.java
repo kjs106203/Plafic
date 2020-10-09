@@ -1,4 +1,4 @@
-package com.teamone.plafic;
+package com.senier_project.planner;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.shashank.sony.fancytoastlib.FancyToast;
-import com.teamone.plafic.adapter.LocationAdapter;
-import com.teamone.plafic.api.ApiClient;
-import com.teamone.plafic.api.ApiInterface;
-import com.teamone.plafic.category_search.CategoryResult;
-import com.teamone.plafic.category_search.Document;
+import com.senier_project.planner.adapter.LocationAdapter;
+import com.senier_project.planner.api.ApiClient;
+import com.senier_project.planner.api.ApiInterface;
+import com.senier_project.planner.category_search.CategoryResult;
+import com.senier_project.planner.category_search.Document;
 
 import net.daum.mf.map.api.MapView;
 

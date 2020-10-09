@@ -1,4 +1,4 @@
-package com.teamone.plafic;
+package com.senier_project.planner;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

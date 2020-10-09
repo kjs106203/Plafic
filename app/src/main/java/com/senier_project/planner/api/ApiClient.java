@@ -1,4 +1,4 @@
-package com.teamone.plafic.api;
+package com.senier_project.planner.api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

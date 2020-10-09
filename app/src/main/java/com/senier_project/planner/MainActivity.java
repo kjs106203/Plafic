@@ -1,4 +1,4 @@
-package com.teamone.plafic;
+package com.senier_project.planner;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
@@ -26,11 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.security.MessageDigest;
-import java.sql.Ref;
 import java.util.Calendar;
 import java.util.Vector;
 

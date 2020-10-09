@@ -1,6 +1,6 @@
-package com.teamone.plafic.api;
+package com.senier_project.planner.api;
 
-import com.teamone.plafic.category_search.CategoryResult;
+import com.senier_project.planner.category_search.CategoryResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -1,4 +1,4 @@
-package com.teamone.plafic.adapter;
+package com.senier_project.planner.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.teamone.plafic.R;
-import com.teamone.plafic.category_search.Document;
+import com.senier_project.planner.R;
+import com.senier_project.planner.category_search.Document;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
