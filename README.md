@@ -1,3 +1,2 @@
 # Plafic
-Real-time location-based departure time notifying application
-hi
+It is my first development of application
